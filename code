@@ -1,0 +1,216 @@
+#include<stdio.h>
+#include<string.h>
+#define N 1000
+//函数声明
+void show_data();    //显示信息
+void input_data();   //输入信息
+void delete_data();  //删除信息
+void search_data();  //查询信息
+void write_data();   //保存信息
+void modify_data();  //修改信息
+void menu();         //菜单
+
+//结构体保存学生信息
+typedef struct student
+{
+    char id[20];             //学生学号
+    char name[20];           //学生姓名
+    char sex[20];            //学生性别
+    int age;                 //学生年龄
+    char roomId[20];         //学生寝室号
+    char phone[20];          //学生手机号
+    char Class[20];          //学生班级
+    struct student *next;
+} stu;
+int num = 0;				//当前信息数
+
+//显示信息
+void show_data(stu *head)
+{
+    int i;
+    stu *p = head->next;
+    printf("\n*****************************************************************\n");
+    printf("学号\t姓名\t性别\t年龄\t寝室号\t手机号\t班级\n");
+    while(p)
+    {
+        printf("%s\t%s\t%s\t%d\t%s\t%s\t%s\n",p->id,p->name,p->sex,p->age,p->roomId,p->phone,p->Class);
+        p = p->next;
+    }
+    printf("*****************************************************************\n");
+}
+
+//输入信息
+void input_data(stu *head)
+{
+    stu *n = (stu*)malloc(sizeof(stu));
+    printf("请输入添加记录的学号: ");
+    scanf("%s", n->id);
+    printf("请输入添加记录的姓名: ");
+    scanf("%s", n->name);
+    printf("请输入添加记录的性别: ");
+    scanf("%s", n->sex);
+    printf("请输入添加记录的年龄: ");
+    scanf("%d", &n->age);
+    printf("请输入添加记录的寝室号: ");
+    scanf("%s", n->roomId);
+    printf("请输入添加记录的手机号: ");
+    scanf("%s", n->phone);
+    printf("请输入添加记录的班级: ");
+    scanf("%s", n->Class);
+    n->next = head->next;
+    head->next = n;
+    puts("添加成功!");
+}
+
+//删除信息
+void delete_data(stu *head)
+{
+    char id[20];
+    stu *p = head, *q;
+    printf("请输入删除记录的学号: ");
+    scanf("%s", id);
+    while(p->next)
+    {
+        if(strcmp(p->next->id, id)==0)
+        {
+            q = p->next;
+            p->next = p->next->next;
+            free(q);
+            puts("删除成功!");
+            return ;
+        }
+        p = p->next;
+    }
+    puts("该记录不存在");
+}
+
+//查询信息
+void search_data(stu *head)
+{
+    char id[20];
+    int flag = 0;
+    stu *p = head->next;
+    printf("请输入查询记录的学号、姓名或班级: ");
+    scanf("%s", id);
+    while(p!=NULL)
+    {
+        if(strcmp(p->id, id)==0 || strcmp(p->name, id)==0 || strcmp(p->Class, id)==0)
+        {
+            printf("\n*****************************************************************\n");
+            printf("学号\t姓名\t性别\t年龄\t寝室号\t手机号\t班级\n");
+            printf("%s\t%s\t%s\t%d\t%s\t%s\t%s\n",p->id,p->name,p->sex,p->age,p->roomId,p->phone,p->Class);
+            printf("*****************************************************************\n");
+            flag = 1;
+        }
+        p = p->next;
+    }
+    if(!flag)
+      puts("该记录不存在");
+}
+
+//保存信息
+void write_data(stu *head)
+{
+    stu *p = head->next;
+    FILE *f = fopen("data.txt","w");
+    while(p)
+    {
+        fprintf(f, "%s\t%s\t%s\t%d\t%s\t%s\t%s\n",p->id,p->name,p->sex,p->age,p->roomId,p->phone,p->Class);
+        p = p->next;
+    }
+    puts("保存成功");
+    fclose(f);
+}
+
+//修改信息
+void modify_data(stu *head)
+{
+    char id[20];
+    stu *n = head->next;
+    printf("请输入修改记录的学号: ");
+    scanf("%s", id);
+    while(n)
+    {
+        if(strcmp(n->id, id)==0)
+        {
+            printf("请输入修改后的学号: ");
+            scanf("%s", n->id);
+            printf("请输入修改后的姓名: ");
+            scanf("%s", n->name);
+            printf("请输入修改后的性别: ");
+            scanf("%s", n->sex);
+            printf("请输入修改后的年龄: ");
+            scanf("%d", &n->age);
+            printf("请输入修改后的寝室号: ");
+            scanf("%s", n->roomId);
+            printf("请输入修改后的手机号: ");
+            scanf("%s", n->phone);
+            printf("请输入修改后的班级: ");
+            scanf("%s", n->Class);
+            printf("修改成功!\n");
+            return ;
+        }
+        n = n->next;
+    }
+    puts("该记录不存在");
+}
+
+void menu(stu *head)
+{
+    int c;
+    system("color E");
+    while(1)
+    {
+        printf("                  欢迎使用学生信息管理系统　　　　　　 \n");
+		printf("#######################################################\n");
+        printf("##  +--------------------+ ## +-------------------+  ##\n");
+        printf("##  + 1.输入信息         + ## +  **学  生**       +  ##\n");
+        printf("##  + 2.删除信息         + ## +  **      **       +  ##\n");
+        printf("##  + 3.显示信息         + ## +  **信  息**       +  ##\n");
+        printf("##  + 4.查询信息         + ## +  **　　　**       +  ##\n");
+        printf("##  + 5.保存信息         + ## +  **管　理**       +  ##\n");
+        printf("##  + 6.修改信息         + ## +  **      **       +  ##\n");
+        printf("##  + 7.退出系统         + ## +  **系  统**       +  ##\n");
+        printf("#######################################################\n");
+        scanf("%d", &c);
+        switch(c)
+        {
+        case 1:
+            input_data(head);
+            show_data(head);
+            break;
+        case 2:
+            delete_data(head);
+            show_data(head);
+            break;
+        case 3:
+            show_data(head);
+            break;
+        case 4:
+            search_data(head);
+            break;
+        case 5:
+            write_data(head);
+            break;
+        case 6:
+            modify_data(head);
+            show_data(head);
+            break;
+        case 7:
+            return;
+        default:
+            printf("输入有误!\n");
+        }
+        system("pause");
+        system("cls");
+    }
+}
+
+
+//主程序
+int main()
+{
+    stu *head = (stu*)malloc(sizeof(stu));
+    head->next = NULL;
+    menu(head);
+}
