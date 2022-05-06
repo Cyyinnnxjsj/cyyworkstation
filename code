@@ -10,6 +10,14 @@ void write_data();   //保存信息
 void modify_data();  //修改信息
 void menu();         //菜单
 
+//主程序
+int main()
+{
+    stu *head = (stu*)malloc(sizeof(stu));
+    head->next = NULL;
+    menu(head);
+}
+
 //结构体保存学生信息
 typedef struct student
 {
@@ -206,11 +214,3 @@ void menu(stu *head)
     }
 }
 
-
-//主程序
-int main()
-{
-    stu *head = (stu*)malloc(sizeof(stu));
-    head->next = NULL;
-    menu(head);
-}
